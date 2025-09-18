@@ -1,12 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Leaf, Users, Building2, ArrowLeft, LogOut, Eye, EyeOff } from 'lucide-react';
+import { Leaf, Users, Building2, ArrowLeft, LogOut, Eye, EyeOff, FlaskConical, Factory } from 'lucide-react';
 import LandingPage from './components/LandingPage';
 import FarmerAuth from './components/FarmerAuth';
 import AgentAuth from './components/AgentAuth';
+import LabAuth from './components/LabAuth';
+import ManufacturerAuth from './components/ManufacturerAuth';
+import AdminAuth from './components/AdminAuth';
 import FarmerDashboard from './components/FarmerDashboard';
 import AgentDashboard from './components/AgentDashboard';
+import LabDashboard from './components/LabDashboard';
+import ManufacturerDashboard from './components/ManufacturerDashboard';
+import AdminDashboard from './components/AdminDashboard';
 
-export type UserType = 'farmer' | 'agent';
+export type UserType = 'farmer' | 'agent' | 'lab' | 'manufacturer' | 'admin';
 
 export interface User {
   id: string;
@@ -16,6 +22,9 @@ export interface User {
   contactNumber?: string;
   farmLocation?: string;
   crops?: string[];
+  labName?: string;
+  manufacturerName?: string;
+  adminLevel?: string;
 }
 
 export interface Batch {
@@ -41,9 +50,10 @@ export interface Batch {
 }
 
 function App() {
-  const [currentPage, setCurrentPage] = useState<'landing' | 'farmer-auth' | 'agent-auth' | 'farmer-dashboard' | 'agent-dashboard'>('landing');
+  const [currentPage, setCurrentPage] = useState<'landing' | 'farmer-auth' | 'agent-auth' | 'lab-auth' | 'manufacturer-auth' | 'admin-auth' | 'farmer-dashboard' | 'agent-dashboard' | 'lab-dashboard' | 'manufacturer-dashboard' | 'admin-dashboard'>('landing');
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [batches, setBatches] = useState<Batch[]>([]);
+  const [language, setLanguage] = useState<'en' | 'hi' | 'kn' | 'ta' | 'te'>('en');
 
   // Load user from localStorage on app start
   useEffect(() => {
@@ -55,6 +65,12 @@ function App() {
         setCurrentPage('farmer-dashboard');
       } else if (user.type === 'agent') {
         setCurrentPage('agent-dashboard');
+      } else if (user.type === 'lab') {
+        setCurrentPage('lab-dashboard');
+      } else if (user.type === 'manufacturer') {
+        setCurrentPage('manufacturer-dashboard');
+      } else if (user.type === 'admin') {
+        setCurrentPage('admin-dashboard');
       }
     }
 
@@ -77,6 +93,12 @@ function App() {
       setCurrentPage('farmer-dashboard');
     } else if (user.type === 'agent') {
       setCurrentPage('agent-dashboard');
+    } else if (user.type === 'lab') {
+      setCurrentPage('lab-dashboard');
+    } else if (user.type === 'manufacturer') {
+      setCurrentPage('manufacturer-dashboard');
+    } else if (user.type === 'admin') {
+      setCurrentPage('admin-dashboard');
     }
   };
 
@@ -87,9 +109,9 @@ function App() {
   };
 
   const handleBack = () => {
-    if (currentPage === 'farmer-auth' || currentPage === 'agent-auth') {
+    if (currentPage.includes('-auth')) {
       setCurrentPage('landing');
-    } else if (currentPage === 'farmer-dashboard' || currentPage === 'agent-dashboard') {
+    } else if (currentPage.includes('-dashboard')) {
       handleLogout();
     }
   };
@@ -146,7 +168,7 @@ function App() {
                 Back
               </button>
               <div className="flex items-center">
-                <Leaf className="w-8 h-8 text-green-600 mr-2" />
+                <img src="https://images.pexels.com/photos/4750274/pexels-photo-4750274.jpeg" alt="Logo" className="w-8 h-8 rounded-full mr-2" />
                 <h1 className="text-xl font-semibold text-gray-900">
                   Ayurvedic Herb Traceability
                 </h1>
@@ -181,15 +203,32 @@ function App() {
           <LandingPage
             onFarmerClick={() => setCurrentPage('farmer-auth')}
             onAgentClick={() => setCurrentPage('agent-auth')}
+            onLabClick={() => setCurrentPage('lab-auth')}
+            onManufacturerClick={() => setCurrentPage('manufacturer-auth')}
+            onAdminClick={() => setCurrentPage('admin-auth')}
+            language={language}
+            onLanguageChange={setLanguage}
           />
         )}
         
         {currentPage === 'farmer-auth' && (
-          <FarmerAuth onLogin={handleLogin} />
+          <FarmerAuth onLogin={handleLogin} language={language} />
         )}
         
         {currentPage === 'agent-auth' && (
-          <AgentAuth onLogin={handleLogin} />
+          <AgentAuth onLogin={handleLogin} language={language} />
+        )}
+        
+        {currentPage === 'lab-auth' && (
+          <LabAuth onLogin={handleLogin} language={language} />
+        )}
+        
+        {currentPage === 'manufacturer-auth' && (
+          <ManufacturerAuth onLogin={handleLogin} language={language} />
+        )}
+        
+        {currentPage === 'admin-auth' && (
+          <AdminAuth onLogin={handleLogin} language={language} />
         )}
         
         {currentPage === 'farmer-dashboard' && currentUser && (
@@ -197,6 +236,7 @@ function App() {
             user={currentUser}
             batches={batches.filter(batch => batch.farmerId === currentUser.id)}
             onAddBatch={addBatch}
+            language={language}
           />
         )}
         
@@ -205,6 +245,34 @@ function App() {
             user={currentUser}
             batches={batches.filter(batch => batch.status !== 'Pending Collection')}
             onUpdateBatchStatus={updateBatchStatus}
+            language={language}
+          />
+        )}
+        
+        {currentPage === 'lab-dashboard' && currentUser && (
+          <LabDashboard
+            user={currentUser}
+            batches={batches}
+            onUpdateBatchStatus={updateBatchStatus}
+            language={language}
+          />
+        )}
+        
+        {currentPage === 'manufacturer-dashboard' && currentUser && (
+          <ManufacturerDashboard
+            user={currentUser}
+            batches={batches}
+            onUpdateBatchStatus={updateBatchStatus}
+            language={language}
+          />
+        )}
+        
+        {currentPage === 'admin-dashboard' && currentUser && (
+          <AdminDashboard
+            user={currentUser}
+            batches={batches}
+            onUpdateBatchStatus={updateBatchStatus}
+            language={language}
           />
         )}
       </main>

@@ -6,9 +6,10 @@ interface AgentDashboardProps {
   user: User;
   batches: Batch[];
   onUpdateBatchStatus: (batchId: string, newStatus: Batch['status'], updatedBy: string) => void;
+  language: 'en' | 'hi' | 'kn' | 'ta' | 'te';
 }
 
-const AgentDashboard: React.FC<AgentDashboardProps> = ({ user, batches, onUpdateBatchStatus }) => {
+const AgentDashboard: React.FC<AgentDashboardProps> = ({ user, batches, onUpdateBatchStatus, language }) => {
   const [activeTab, setActiveTab] = useState<'dashboard' | 'assigned-batches' | 'batch-details'>('dashboard');
   const [selectedBatch, setSelectedBatch] = useState<Batch | null>(null);
 

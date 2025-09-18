@@ -1,28 +1,29 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff, Building2 } from 'lucide-react';
+import { Eye, EyeOff, Factory } from 'lucide-react';
 import { User } from '../App';
 
-interface AgentAuthProps {
+interface ManufacturerAuthProps {
   onLogin: (user: User) => void;
   language: 'en' | 'hi' | 'kn' | 'ta' | 'te';
 }
 
-const AgentAuth: React.FC<AgentAuthProps> = ({ onLogin, language }) => {
+const ManufacturerAuth: React.FC<ManufacturerAuthProps> = ({ onLogin, language }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
+    manufacturerName: ''
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // For demo purposes, accept any email/password combination
     const user: User = {
-      id: 'agent-' + Date.now().toString(),
-      name: 'Collection Agent',
+      id: 'manufacturer-' + Date.now().toString(),
+      name: formData.manufacturerName || 'Ayurvedic Manufacturer',
       email: formData.email,
-      type: 'agent'
+      type: 'manufacturer',
+      manufacturerName: formData.manufacturerName || 'Ayurvedic Products Ltd'
     };
     onLogin(user);
   };
@@ -30,14 +31,27 @@ const AgentAuth: React.FC<AgentAuthProps> = ({ onLogin, language }) => {
   return (
     <div className="max-w-md mx-auto bg-white rounded-xl shadow-lg p-8">
       <div className="text-center mb-8">
-        <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-          <Building2 className="w-8 h-8 text-blue-600" />
+        <div className="bg-orange-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+          <Factory className="w-8 h-8 text-orange-600" />
         </div>
-        <h2 className="text-2xl font-bold text-gray-900">Agent Login</h2>
-        <p className="text-gray-600 mt-2">Access your collection dashboard</p>
+        <h2 className="text-2xl font-bold text-gray-900">Manufacturer Login</h2>
+        <p className="text-gray-600 mt-2">Access your production dashboard</p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-2">
+            Manufacturer Name
+          </label>
+          <input
+            type="text"
+            value={formData.manufacturerName}
+            onChange={(e) => setFormData({ ...formData, manufacturerName: e.target.value })}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            placeholder="Enter manufacturer name"
+          />
+        </div>
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Email Address *
@@ -47,8 +61,8 @@ const AgentAuth: React.FC<AgentAuthProps> = ({ onLogin, language }) => {
             required
             value={formData.email}
             onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            placeholder="agent@example.com"
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            placeholder="manufacturer@example.com"
           />
         </div>
 
@@ -62,7 +76,7 @@ const AgentAuth: React.FC<AgentAuthProps> = ({ onLogin, language }) => {
               required
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-              className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               placeholder="Enter your password"
             />
             <button
@@ -77,19 +91,19 @@ const AgentAuth: React.FC<AgentAuthProps> = ({ onLogin, language }) => {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+          className="w-full bg-orange-600 text-white py-3 px-4 rounded-lg font-semibold hover:bg-orange-700 transition-colors"
         >
           Login
         </button>
 
         <div className="text-center text-sm text-gray-600">
           <p>Demo credentials:</p>
-          <p>Email: agent@example.com</p>
-          <p>Password: agent123</p>
+          <p>Email: manufacturer@example.com</p>
+          <p>Password: mfg123</p>
         </div>
       </form>
     </div>
   );
 };
 
-export default AgentAuth;
+export default ManufacturerAuth;

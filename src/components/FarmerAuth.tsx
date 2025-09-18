@@ -4,9 +4,10 @@ import { User } from '../App';
 
 interface FarmerAuthProps {
   onLogin: (user: User) => void;
+  language: 'en' | 'hi' | 'kn' | 'ta' | 'te';
 }
 
-const FarmerAuth: React.FC<FarmerAuthProps> = ({ onLogin }) => {
+const FarmerAuth: React.FC<FarmerAuthProps> = ({ onLogin, language }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({

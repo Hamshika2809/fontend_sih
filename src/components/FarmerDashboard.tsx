@@ -6,9 +6,10 @@ interface FarmerDashboardProps {
   user: User;
   batches: Batch[];
   onAddBatch: (batch: Omit<Batch, 'id' | 'createdAt' | 'updatedAt' | 'history'>) => void;
+  language: 'en' | 'hi' | 'kn' | 'ta' | 'te';
 }
 
-const FarmerDashboard: React.FC<FarmerDashboardProps> = ({ user, batches, onAddBatch }) => {
+const FarmerDashboard: React.FC<FarmerDashboardProps> = ({ user, batches, onAddBatch, language }) => {
   const [activeTab, setActiveTab] = useState<'overview' | 'add-batch' | 'my-batches'>('overview');
   const [newBatch, setNewBatch] = useState({
     species: 'Ashwagandha',
